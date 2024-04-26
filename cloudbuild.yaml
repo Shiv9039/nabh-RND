@@ -17,7 +17,7 @@ steps:
   - '--image'
   - '${_REPO_REGION}/${_PROJ_ID}/${_REPO_NAME}/${_SERVICE_NAME}'
   - '--port'
-  - '80'
+  - '8080'
   - '--region'
   - '${_REGION}'
   - '--platform'
