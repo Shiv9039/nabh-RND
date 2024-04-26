@@ -32,7 +32,7 @@ steps:
   # - '--set-secrets'
   # - 'SECRET_KEY=${_SECRET_ID}:latest'   
   - '--set-env-vars'
-  -'api_key=AIzaSyBGB1mXdikSsTXoiIL8-VdhHpclMZ5yJuE'
+  - 'api_key=AIzaSyBGB1mXdikSsTXoiIL8-VdhHpclMZ5yJuE'
   
 
   
