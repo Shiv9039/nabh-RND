@@ -9,5 +9,5 @@ RUN pip install -r requirements.txt
 #CMD exec gunicorn -b 0.0.0.0:8080 -w 4 app:app
 #CMD exec gunicorn -b 0.0.0.0:8080 --worker-class eventlet --workers 1 --timeout 0 --threads 8 app:app
 #CMD exec python app.py
-CMD exec uvicorn FastapiApp:app --host 0.0.0.0 --port 8080
+CMD exec uvicorn FastapiApp:GeminiPaperCreator --host 0.0.0.0 --port 8080
 
