@@ -3,7 +3,6 @@ from fastapi import FastAPI , Request , File, UploadFile
 import google.generativeai as genai
 import uuid
 import os
-import tempfile
 
 genai.configure(api_key=str(os.environ['api_key']))
 
@@ -35,17 +34,24 @@ safety_settings = [
 
 app = FastAPI()
 
+@app.get("/")
+async def home():
+    return {"data": "home page"}
+
 @app.post("/create_paper")
 async def load_pdf(file: UploadFile = File(...)):
       try:
-          print("in try block")
-          with tempfile.NamedTemporaryFile(delete=True) as tmp:
-              tmp.write(await file.read())
-              print("temp data",temp)
-              tmp_file_path = tmp.name
-              loader = PyPDFLoader(tmp_file_path, extract_images=True)
-              data = loader.load()
-              print("daatata",data)
+
+          filename = file.filename
+          path = f"static/upload/{uuid.uuid4()}{filename}"
+
+          with open(path, "wb") as buffer:
+              buffer.write(await file.read())
+
+          loader = PyPDFLoader(path, extract_images=True)
+          data = loader.load()
+
+          os.remove(path)
 
           model = genai.GenerativeModel(model_name="gemini-1.0-pro-latest",
                                         generation_config=generation_config,
@@ -61,6 +67,5 @@ async def load_pdf(file: UploadFile = File(...)):
           return {"data" : convo.last.text}
 
       except Exception as e:
-          print("in exception block")
+          print(e)
           return {"data" : e}
-
