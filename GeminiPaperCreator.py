@@ -48,7 +48,7 @@ async def load_pdf(file: UploadFile = File(...)):
           with open(path, "wb") as buffer:
               buffer.write(await file.read())
 
-          loader = PyPDFLoader(path, extract_images=True)
+          loader = PyPDFLoader(path, extract_images=False)
           data = loader.load()
 
           os.remove(path)
