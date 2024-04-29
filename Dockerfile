@@ -5,7 +5,7 @@ ADD . /app
 WORKDIR /app
 RUN apt update -y \
     && apt install -y build-essential libpoppler-cpp-dev pkg-config python3-dev \
-    && pip install -r requirements.txt && pip install rapidocr-onnxruntime
+    && pip install -r requirements.txt
 CMD exec uvicorn GeminiPaperCreator:app --host 0.0.0.0 --port 8080
 
 
