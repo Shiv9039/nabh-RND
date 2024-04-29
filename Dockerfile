@@ -1,6 +1,6 @@
 FROM python:latest
-# RUN mkdir -p /app/static/upload  # Create parent directories if they don't exist
-RUN mkdir /app
+RUN mkdir -p /app/static/upload  # Create parent directories if they don't exist
+# RUN mkdir /app
 ADD . /app
 WORKDIR /app
 RUN apt update -y \
