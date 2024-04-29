@@ -41,9 +41,11 @@ async def load_pdf(file: UploadFile = File(...)):
           print("in try block")
           with tempfile.NamedTemporaryFile(delete=True) as tmp:
               tmp.write(await file.read())
+              print("temp data",temp)
               tmp_file_path = tmp.name
               loader = PyPDFLoader(tmp_file_path, extract_images=True)
               data = loader.load()
+              print("daatata",data)
 
           model = genai.GenerativeModel(model_name="gemini-1.0-pro-latest",
                                         generation_config=generation_config,
