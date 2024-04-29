@@ -38,7 +38,7 @@ app = FastAPI()
 @app.post("/create_paper")
 async def load_pdf(file: UploadFile = File(...)):
       try:
-
+          print("in try block")
           with tempfile.NamedTemporaryFile(delete=True) as tmp:
               tmp.write(await file.read())
               tmp_file_path = tmp.name
@@ -59,5 +59,6 @@ async def load_pdf(file: UploadFile = File(...)):
           return {"data" : convo.last.text}
 
       except Exception as e:
+          print("in exception block")
           return {"data" : e}
 
