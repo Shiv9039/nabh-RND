@@ -61,9 +61,9 @@ async def load_pdf(file: UploadFile = File(...)):
           #    goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
           #    output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
           #    context - {data}"""
-            prompt = f"""persona - you are a question paper creater 
-               goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
-               output format-{
+          prompt = f"""persona - you are a question paper creater 
+              goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
+              output format-{
               {
                 [ 
                   {
@@ -96,7 +96,7 @@ async def load_pdf(file: UploadFile = File(...)):
                         ],
                         "answer": "1"
                   }, ...]}}
-               context - {data}"""
+              context - {data}"""
 
           convo = model.start_chat()
           convo.send_message(prompt)
