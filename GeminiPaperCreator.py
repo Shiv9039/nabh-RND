@@ -48,7 +48,7 @@ async def load_pdf(file: UploadFile = File(...)):
           with open(path, "wb") as buffer:
               buffer.write(await file.read())
 
-          loader = PyPDFLoader(path, extract_images=False)
+          loader = PyPDFLoader(path, extract_images=True)
           data = loader.load()
 
           os.remove(path)
@@ -56,47 +56,48 @@ async def load_pdf(file: UploadFile = File(...)):
           model = genai.GenerativeModel(model_name="gemini-1.0-pro-latest",
                                         generation_config=generation_config,
                                         safety_settings=safety_settings)
+          #
+          # prompt = f"""persona - you are a question paper creater
+          #              goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
+          #              output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
+          #              context - {data}"""
 
-          # prompt = f"""persona - you are a question paper creater 
-          #    goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
-          #    output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
-          #    context - {data}"""
           prompt = f"""persona - you are a question paper creater 
-              goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
-              output format-{
-              {
-                [ 
-                  {
-                    "question": "A soap bubble is given a negative charge, then its radius",
-                    "options": [
-                          {
-                              "value": "Decreases",
+                        goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
+                        output format- {{
+              [
+                  {{
+                      "question": "description of the question",
+                      "options": [
+                          {{
+                              "value": "description of option 1",
                               "optionId": 1,
-                              "selected": false,
+                              "selected": always false,
                               "optionType": "normal"
-                          },
-                          {
-                              "value": "Increases",
+                          }},
+                          {{
+                              "value": "description of option 2",
                               "optionId": 2,
-                              "selected": false,
+                              "selected": always false,
                               "optionType": "normal"
-                          },
-                          {
-                              "value": "Remains unchanged",
+                          }},
+                          {{
+                              "value": "description of option 3",
                               "optionId": 3,
-                              "selected": false,
+                              "selected": always false,
                               "optionType": "normal"
-                          },
-                          {
-                              "value": "Nothing can be predicted as information is insufficient",
+                          }},
+                          {{
+                              "value": "description of option 4",
                               "optionId": 4,
-                              "selected": false,
+                              "selected": always false,
                               "optionType": "normal"
-                          }
-                        ],
-                        "answer": "1"
-                  }, ...]}}
-              context - {data}"""
+                          }}
+                      ],
+                      "answer": "1"
+                  }}, ...] }}
+                  
+                  context - {data}"""
 
           convo = model.start_chat()
           convo.send_message(prompt)
