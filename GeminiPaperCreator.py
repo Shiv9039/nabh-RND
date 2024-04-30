@@ -57,10 +57,46 @@ async def load_pdf(file: UploadFile = File(...)):
                                         generation_config=generation_config,
                                         safety_settings=safety_settings)
 
-          prompt = f"""persona - you are a question paper creater 
-             goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
-             output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
-             context - {data}"""
+          # prompt = f"""persona - you are a question paper creater 
+          #    goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
+          #    output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
+          #    context - {data}"""
+            prompt = f"""persona - you are a question paper creater 
+               goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
+               output format-{
+              {
+                [ 
+                  {
+                    "question": "A soap bubble is given a negative charge, then its radius",
+                    "options": [
+                          {
+                              "value": "Decreases",
+                              "optionId": 1,
+                              "selected": false,
+                              "optionType": "normal"
+                          },
+                          {
+                              "value": "Increases",
+                              "optionId": 2,
+                              "selected": false,
+                              "optionType": "normal"
+                          },
+                          {
+                              "value": "Remains unchanged",
+                              "optionId": 3,
+                              "selected": false,
+                              "optionType": "normal"
+                          },
+                          {
+                              "value": "Nothing can be predicted as information is insufficient",
+                              "optionId": 4,
+                              "selected": false,
+                              "optionType": "normal"
+                          }
+                        ],
+                        "answer": "1"
+                  }, ...]}}
+               context - {data}"""
 
           convo = model.start_chat()
           convo.send_message(prompt)
