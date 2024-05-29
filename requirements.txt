@@ -23,7 +23,7 @@ flatbuffers==24.3.25
 frozenlist==1.4.1
 fsspec==2024.3.1
 gcloud==0.17.0
-google-ai-generativelanguage==0.6.4
+google-ai-generativelanguage==0.4.0
 google-api-core==2.18.0
 google-auth==2.29.0
 google-cloud-aiplatform==1.47.0
@@ -34,7 +34,7 @@ google-cloud-resource-manager==1.12.3
 google-cloud-secret-manager==2.19.0
 google-cloud-storage==2.16.0
 google-crc32c==1.5.0
-google-generativeai==0.3.2
+google-generativeai==0.5.4
 google-resumable-media==2.7.0
 googleapis-common-protos==1.63.0
 grpc-google-iam-v1==0.13.0
