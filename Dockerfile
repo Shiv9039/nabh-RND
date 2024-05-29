@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.11
 RUN mkdir -p /app/static/upload  # Create parent directories if they don't exist
 # RUN mkdir /app
 ADD . /app
