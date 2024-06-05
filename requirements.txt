@@ -3,3 +3,4 @@ google-generativeai
 langchain
 pypdf
 langchain_community
+rapidocr-onnxruntime
