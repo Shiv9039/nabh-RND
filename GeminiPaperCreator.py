@@ -1,5 +1,5 @@
 from langchain_community.document_loaders import PyPDFLoader
-from fastapi import FastAPI, Request, File, UploadFile
+from fastapi import FastAPI, File, UploadFile
 import google.generativeai as genai
 import uuid
 import json
@@ -12,7 +12,6 @@ generation_config = {
     "top_p": 0.95,
     "top_k": 0,
     "max_output_tokens": 8192,
-    "response_mime_type": "application/json",
 }
 
 safety_settings = [
@@ -105,20 +104,16 @@ async def load_pdf(file: UploadFile = File(...)):
 
         convo = model.start_chat()
         convo.send_message(prompt)
-
+        out = convo.last.text.replace("```json" , "").replace("```" , "")
         try:
-            return {"data": json.loads(convo.last.text)}
+            return {"data": json.loads(out)}
         except Exception as e:
-            print("error type : " ,e)
+            print("error type : ", e)
             return {"data": ""}
 
     except Exception as e:
         print(e)
         return {"data": e}
-
-
-
-
 
 # from langchain_community.document_loaders import PyPDFLoader
 # from fastapi import FastAPI , Request , File, UploadFile
@@ -184,7 +179,7 @@ async def load_pdf(file: UploadFile = File(...)):
 #           #              output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
 #           #              context - {data}"""
 
-#           prompt = f"""persona - you are a question paper creater 
+#           prompt = f"""persona - you are a question paper creater
 #                         goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
 #                         output format- {{
 #               [
@@ -218,7 +213,7 @@ async def load_pdf(file: UploadFile = File(...)):
 #                       ],
 #                       "answer": "1"
 #                   }}, ...] }}
-                  
+
 #                   context - {data}"""
 
 #           convo = model.start_chat()
