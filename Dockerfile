@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.11
+FROM python:3.11
 
 RUN mkdir -p /app/static/upload
 ADD . /app
