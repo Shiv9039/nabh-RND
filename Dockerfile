@@ -1,13 +1,28 @@
-FROM python:3.11
-RUN mkdir -p /app/static/upload  # Create parent directories if they don't exist
-# RUN mkdir /app
+FROM --platform=$BUILDPLATFORM python:3.11
+
+RUN mkdir -p /app/static/upload
 ADD . /app
 WORKDIR /app
+
 RUN apt update -y \
     && apt install -y build-essential libpoppler-cpp-dev pkg-config python3-dev \
     && pip install -r requirements.txt
+
 RUN pip install rapidocr-onnxruntime
-CMD exec uvicorn GeminiPaperCreator:app --host 0.0.0.0 --port 8080
+
+CMD ["uvicorn", "GeminiPaperCreator:app", "--host", "0.0.0.0", "--port", "8080"]
+
+
+# FROM python:3.11
+# RUN mkdir -p /app/static/upload  # Create parent directories if they don't exist
+# # RUN mkdir /app
+# ADD . /app
+# WORKDIR /app
+# RUN apt update -y \
+#     && apt install -y build-essential libpoppler-cpp-dev pkg-config python3-dev \
+#     && pip install -r requirements.txt
+# RUN pip install rapidocr-onnxruntime
+# CMD exec uvicorn GeminiPaperCreator:app --host 0.0.0.0 --port 8080
 
 
 
