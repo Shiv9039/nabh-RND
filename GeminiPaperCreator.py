@@ -4,7 +4,7 @@ from io import BytesIO
 import json
 import fitz
 
-genai.configure(api_key="AIzaSyBGB1mXdikSsTXoiIL8-VdhHpclMZ5yJuE")
+genai.configure(api_key="AIzaSyBw6MWF4aJnxBUgbJoEVxIfUYsCQBjmCwg")
 
 generation_config = {
     "temperature": 0,
