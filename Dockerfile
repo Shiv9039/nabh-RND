@@ -15,7 +15,8 @@
 # CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "GeminiPaperCreator:app", "--bind", "0.0.0.0:8080"]
 
 
-FROM python:3.11
+# FROM python:3.11
+FROM public.ecr.aws/docker/library/python:3.11
 ADD . /app
 WORKDIR /app
 RUN apt update -y \
