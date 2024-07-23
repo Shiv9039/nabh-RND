@@ -16,7 +16,7 @@
 
 
 # FROM python:3.11
-FROM public.ecr.aws/docker/library/python:3.11-alpine
+FROM public.ecr.aws/docker/library/python:3.11-slim
 ADD . /app
 WORKDIR /app
 RUN apt update -y \
