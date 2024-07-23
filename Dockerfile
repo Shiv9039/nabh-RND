@@ -23,9 +23,8 @@ RUN apt update -y \
     # && apt install -y build-essential libpoppler-cpp-dev pkg-config python3-dev \
     && pip install -r requirements.txt
 # RUN pip install rapidocr-onnxruntime
-CMD exec gunicorn GeminiPaperCreator:app --host 0.0.0.0 --port 8080
-# CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "GeminiPaperCreator:app", "--bind", "0.0.0.0:8080"]
-
+# CMD exec gunicorn GeminiPaperCreator:app --host 0.0.0.0 --port 8080
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "GeminiPaperCreator:app", "--bind", "0.0.0.0:8080", "--timeout", "120"]
 
 
 
