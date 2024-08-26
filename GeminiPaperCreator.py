@@ -1,8 +1,14 @@
-from fastapi import FastAPI, File, UploadFile
 import google.generativeai as genai
 from io import BytesIO
 import json
 import fitz
+import os
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from typing import List
+from docx import Document
+import pandas as pd
 
 genai.configure(api_key="AIzaSyBw6MWF4aJnxBUgbJoEVxIfUYsCQBjmCwg")
 
@@ -112,3 +118,72 @@ async def load_pdf(file: UploadFile = File(...)):
     except Exception as e:
         print(e)
         return {"data": e}
+
+def extract_tables_from_word(file, image_dir='extracted_images'):
+    os.makedirs(image_dir, exist_ok=True)
+
+    doc = Document(file)
+    all_tables = []
+
+    for table_idx, table in enumerate(doc.tables):
+        data = []
+        for row_idx, row in enumerate(table.rows):
+            row_data = []
+            for cell_idx, cell in enumerate(row.cells):
+                cell_text = cell.text.strip()
+                images = []
+
+                for drawing in cell._element.xpath('.//w:drawing'):
+                    image = drawing.xpath('.//a:blip/@r:embed')
+                    if image:
+                        image_id = image[0]
+                        image_part = doc.part.related_parts[image_id]
+
+                        image_filename = f"{table_idx}_{row_idx}_{cell_idx}_{image_part.partname.split('/')[-1]}"
+                        with open(os.path.join(image_dir, image_filename), 'wb') as img_file:
+                            img_file.write(image_part.blob)
+
+                        images.append(image_filename)
+
+                for pict in cell._element.xpath('.//w:pict'):
+                    image = pict.xpath('.//v:imagedata/@r:id')
+                    if image:
+                        image_id = image[0]
+                        image_part = doc.part.related_parts[image_id]
+
+                        image_filename = f"{table_idx}_{row_idx}_{cell_idx}_{image_part.partname.split('/')[-1]}"
+                        with open(os.path.join(image_dir, image_filename), 'wb') as img_file:
+                            img_file.write(image_part.blob)
+
+                        images.append(image_filename)
+
+                if images:
+                    cell_text += ' (Images: ' + ', '.join(images) + ')'
+
+                row_data.append(cell_text)
+            data.append(row_data)
+
+        df = pd.DataFrame(data[1:], columns=data[0])
+        all_tables.append(df)
+
+    return all_tables
+
+class ExtractedTable(BaseModel):
+    table: List[List[str]]
+
+
+@app.post("/extract-tables", response_model=List[ExtractedTable])
+async def extract_tables(file: UploadFile = File(...)):
+    if not file.filename.endswith('.docx'):
+        raise HTTPException(status_code=400, detail="Invalid file format. Please upload a .docx file.")
+    
+    try:
+        file_path = file.file.read()
+        tables = extract_tables_from_word(file_path)
+
+        response = [ExtractedTable(table=df.values.tolist()) for df in tables]
+        return JSONResponse(content=response)
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
