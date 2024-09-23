@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 import google.generativeai as genai
 from io import BytesIO
 import json
@@ -113,7 +113,7 @@ async def load_pdf(file: UploadFile = File(...)):
         return {"data": e}
 
 @app.post("/generate_paper")
-async def generate_paper(request):
+async def generate_paper(request:Request):
     try:
         config = await request.json()
 
