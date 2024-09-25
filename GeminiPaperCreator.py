@@ -94,7 +94,8 @@ async def load_pdf(file: UploadFile = File(...)):
                               "optionType": "normal"
                           }}
                       ],
-                      "answer": "1"
+                      "answer": "1",
+                      "solution":"description of option 1 in human readable format"
                   }}, ...] }}
 
                   context - {data}"""
