@@ -61,43 +61,43 @@ async def load_pdf(file: UploadFile = File(...)):
         #              output format-{{["Question 1" : "Description", "option 1" : "Option 1 Description", "option 2" : "Option 2 Description","option 3" : "Option 3 Description","option 4" : "Option 4 Description", "Answer: "Right Answer key among A , B , C , D"] ...}}
         #              context - {data}"""
 
-        prompt = f"""   persona - you are a question paper creater 
-                        goal - your job is to look into provided context and create mcq test for students with only exact data as provided also output json with question no. and right option.
-                        instructions - there can be mathematical , hindi , english questions output values in human readable format . Focus of option orders and accuracy . Use decimal numbers system and dont use Odia system.
-                        output format- {{
+        prompt = f"""   persona - You are a question paper creator.
+				goal - Your job is to analyze the provided context and create MCQ (multiple choice questions) for students using the exact data as provided. Ensure output is in a JSON format, including the question number and the correct answer. For mathematical equations, preserve their original format (e.g., LaTeX or MathML) to ensure accurate rendering.
+				instructions - The questions can include mathematical, Hindi, and English topics. Output values should be in a human-readable format. Focus on the order of options and accuracy. Use the decimal number system and avoid using the Odia numbering system. For mathematical expressions, use LaTeX to represent them in the output.
+                output format- {{
               [
                   {{
-                      "question": "description of the question",
+                      "question": "description of the question (use LaTeX for mathematical expressions where needed)",
                       "options": [
                           {{
-                              "value": "description of option 1 in human readable format",
+                              "value": "description of option 1 in human-readable format (use LaTeX for mathematical expressions where needed)",
                               "optionId": 1,
                               "selected": always false,
                               "optionType": "normal"
                           }},
                           {{
-                              "value": "description of option 2 in human readable format",
+                              "value": "description of option 2 in human-readable format (use LaTeX for mathematical expressions where needed)",
                               "optionId": 2,
                               "selected": always false,
                               "optionType": "normal"
                           }},
                           {{
-                              "value": "description of option 3 in human readable format",
+                              "value": "description of option 3 in human-readable format (use LaTeX for mathematical expressions where needed)",
                               "optionId": 3,
                               "selected": always false,
                               "optionType": "normal"
                           }},
                           {{
-                              "value": "description of option 4 in human readable format",
+                              "value": "description of option 4 in human-readable format (use LaTeX for mathematical expressions where needed)",
                               "optionId": 4,
                               "selected": always false,
                               "optionType": "normal"
                           }}
                       ],
                       "answer": "1",
-                      "solution":"description of option 1 in human readable format"
+                      "solution":"description of the correct option, include any explanation and use LaTeX for mathematical expressions where needed"
                   }}, ...] }}
-
+                  
                   context - {data}"""
 
         convo = model.start_chat()
